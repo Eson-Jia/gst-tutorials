@@ -53,7 +53,8 @@ int main(int argc, char *argv[])
 
   /* Set the URI to play */
   g_object_set(data.source, "uri",
-               "https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm",
+               //  "https://www.freedesktop.org/software/gstreamer-sdk/data/media/sintel_trailer-480p.webm",
+               "file:///home/ubuntu/Work/gst-tutorials/sintel_trailer-480p.webm",
                NULL);
 
   /* Connect to the pad-added signal */
