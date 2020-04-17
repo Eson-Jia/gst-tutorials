@@ -8,6 +8,7 @@ typedef struct _CustomData
   GstElement *audio_convert;
   GstElement *audio_resample;
   GstElement *audio_sink;
+  GstElement *video_convert;
   GstElement *video_sink;
 } CustomData;
 
@@ -31,12 +32,15 @@ int main(int argc, char *argv[])
   data.audio_convert = gst_element_factory_make("audioconvert", "convert");
   data.audio_resample = gst_element_factory_make("audioresample", "resample");
   data.audio_sink = gst_element_factory_make("autoaudiosink", "sink");
+  data.video_convert = gst_element_factory_make("videoconvert", "video_convert");
   data.video_sink = gst_element_factory_make("autovideosink", "video_sink");
 
   /* Create the empty pipeline */
   data.pipeline = gst_pipeline_new("test-pipeline");
 
-  if (!data.pipeline || !data.source || !data.audio_convert || !data.audio_resample || !data.audio_sink || !data.video_sink)
+  if (!data.pipeline ||
+      !data.source || !data.audio_convert || !data.audio_resample || !data.audio_sink ||
+      !data.video_convert || !data.video_sink)
   {
     g_printerr("Not all elements could be created.\n");
     return -1;
@@ -44,12 +48,20 @@ int main(int argc, char *argv[])
 
   /* Build the pipeline. Note that we are NOT linking the source at this
    * point. We will do it later. */
-  gst_bin_add_many(GST_BIN(data.pipeline), data.source, data.audio_convert,
-                   data.audio_resample, data.audio_sink,
-                   data.video_sink, NULL);
+  gst_bin_add_many(GST_BIN(data.pipeline), data.source,
+                   data.audio_convert, data.audio_resample, data.audio_sink,
+                   data.video_convert, data.video_sink,
+                   NULL);
   if (!gst_element_link_many(data.audio_convert, data.audio_resample, data.audio_sink, NULL))
   {
-    g_printerr("Elements could not be linked.\n");
+    g_printerr("audio Elements could not be linked.\n");
+    gst_object_unref(data.pipeline);
+    return -1;
+  }
+
+  if (!gst_element_link_many(data.video_convert, data.video_sink, NULL))
+  {
+    g_printerr("video Elements could not be linked.\n");
     gst_object_unref(data.pipeline);
     return -1;
   }
@@ -135,7 +147,7 @@ static void
 pad_added_handler(GstElement *src, GstPad *new_pad, CustomData *data)
 {
   GstPad *audio_sink_pad = gst_element_get_static_pad(data->audio_convert, "sink");
-  GstPad *video_sink_pad = gst_element_get_static_pad(data->video_sink, "sink");
+  GstPad *video_sink_pad = gst_element_get_static_pad(data->video_convert, "sink");
   GstPad *sink_pad = NULL;
   GstPadLinkReturn ret;
   GstCaps *new_pad_caps = NULL;
