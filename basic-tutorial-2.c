@@ -27,21 +27,7 @@ int main(int argc, char *argv[])
 
   /* Build the pipeline */
   gst_bin_add_many(GST_BIN(pipeline), source, nice, convert, sink, NULL);
-  if (gst_element_link(source, nice) != TRUE)
-  {
-    g_printerr("Elements could not be linked.\n");
-    gst_object_unref(pipeline);
-    return -1;
-  }
-
-  if (gst_element_link(nice, convert) != TRUE)
-  {
-    g_printerr("Elements could not be linked.\n");
-    gst_object_unref(pipeline);
-    return -1;
-  }
-
-  if (gst_element_link(convert, sink) != TRUE)
+  if (gst_element_link_many(source, nice, convert, sink, NULL) != TRUE)
   {
     g_printerr("Elements could not be linked.\n");
     gst_object_unref(pipeline);
