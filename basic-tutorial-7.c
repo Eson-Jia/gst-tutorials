@@ -28,7 +28,11 @@ int main(int argc, char *argv[])
   /* Create the empty pipeline */
   pipeline = gst_pipeline_new("test-pipeline");
 
-  if (!pipeline || !audio_source || !tee || !audio_queue || !audio_convert || !audio_resample || !audio_sink || !video_queue || !visual || !video_convert || !video_sink)
+  if (!pipeline ||
+      !audio_source ||
+      !tee ||
+      !audio_queue || !audio_convert || !audio_resample || !audio_sink ||
+      !video_queue || !visual || !video_convert || !video_sink)
   {
     g_printerr("Not all elements could be created.\n");
     return -1;
@@ -42,7 +46,9 @@ int main(int argc, char *argv[])
   gst_bin_add_many(GST_BIN(pipeline), audio_source, tee, audio_queue,
                    audio_convert, audio_resample, audio_sink, video_queue, visual,
                    video_convert, video_sink, NULL);
-  if (gst_element_link_many(audio_source, tee, NULL) != TRUE || gst_element_link_many(audio_queue, audio_convert, audio_resample, audio_sink, NULL) != TRUE || gst_element_link_many(video_queue, visual, video_convert, video_sink, NULL) != TRUE)
+  if (gst_element_link_many(audio_source, tee, NULL) != TRUE ||
+      gst_element_link_many(audio_queue, audio_convert, audio_resample, audio_sink, NULL) != TRUE ||
+      gst_element_link_many(video_queue, visual, video_convert, video_sink, NULL) != TRUE)
   {
     g_printerr("Elements could not be linked.\n");
     gst_object_unref(pipeline);
@@ -51,12 +57,10 @@ int main(int argc, char *argv[])
 
   /* Manually link the Tee, which has "Request" pads */
   tee_audio_pad = gst_element_get_request_pad(tee, "src_%u");
-  g_print("Obtained request pad %s for audio branch.\n",
-          gst_pad_get_name(tee_audio_pad));
+  g_print("Obtained request pad %s for audio branch.\n", gst_pad_get_name(tee_audio_pad));
   queue_audio_pad = gst_element_get_static_pad(audio_queue, "sink");
   tee_video_pad = gst_element_get_request_pad(tee, "src_%u");
-  g_print("Obtained request pad %s for video branch.\n",
-          gst_pad_get_name(tee_video_pad));
+  g_print("Obtained request pad %s for video branch.\n", gst_pad_get_name(tee_video_pad));
   queue_video_pad = gst_element_get_static_pad(video_queue, "sink");
   if (gst_pad_link(tee_audio_pad, queue_audio_pad) != GST_PAD_LINK_OK ||
       gst_pad_link(tee_video_pad, queue_video_pad) != GST_PAD_LINK_OK)
