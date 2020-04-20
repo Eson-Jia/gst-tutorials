@@ -207,7 +207,10 @@ int main(int argc, char *argv[])
                    data.audio_queue, data.audio_convert1, data.audio_resample,
                    data.audio_sink, data.video_queue, data.audio_convert2, data.visual,
                    data.video_convert, data.video_sink, data.app_queue, data.app_sink, NULL);
-  if (gst_element_link_many(data.app_source, data.tee, NULL) != TRUE || gst_element_link_many(data.audio_queue, data.audio_convert1, data.audio_resample, data.audio_sink, NULL) != TRUE || gst_element_link_many(data.video_queue, data.audio_convert2, data.visual, data.video_convert, data.video_sink, NULL) != TRUE || gst_element_link_many(data.app_queue, data.app_sink, NULL) != TRUE)
+  if (gst_element_link_many(data.app_source, data.tee, NULL) != TRUE ||
+      gst_element_link_many(data.audio_queue, data.audio_convert1, data.audio_resample, data.audio_sink, NULL) != TRUE ||
+      gst_element_link_many(data.video_queue, data.audio_convert2, data.visual, data.video_convert, data.video_sink, NULL) != TRUE ||
+      gst_element_link_many(data.app_queue, data.app_sink, NULL) != TRUE)
   {
     g_printerr("Elements could not be linked.\n");
     gst_object_unref(data.pipeline);
