@@ -18,5 +18,16 @@ gst-launch-1.0 -v udpsrc uri=udp://localhost:5001 ! "application/x-rtp,media=(st
 
 ## ffmpeg
 
-推到广播:`ffmpeg -re -i Videos/hunter.mkv -vn -ac 1 -ar 16000 -acodec aac  -f rtp rtp://233.233.233.223:6666>test.sdp`
-播放:`ffplay -v 64 -protocol_whitelist "file,http,https,rtp,udp,tcp,tls" ./test.sdp`
+### RTP
+
+#### 发送H.264裸流至组播地址
+
+ffmpeg -re -i ~/Videos/hunter.mkv -vcodec copy -an -f rtp rtp://233.233.233.223:6666>test.sdp
+
+#### 发送 AAC 裸流至组播地址
+
+ffmpeg -re -i ~/Videos/hunter.mkv -vn -ac 1 -ar 16000 -acodec aac  -f rtp rtp://233.233.233.223:6666>test.sdp
+
+#### 播放组播地址
+
+ffplay -loglevel debug -protocol_whitelist "file,rtp,udp" ./test.sdp
