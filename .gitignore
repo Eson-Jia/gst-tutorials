@@ -6,3 +6,11 @@ sintel_trailer-480p.webm
 test.sdp
 *.out
 test/test
+
+cmake-build-debug/
+
+test-app
+
+CMakeFiles/
+
+CMakeCache.txt
