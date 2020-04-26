@@ -58,7 +58,7 @@ int main(int argc, char *argv[])
     g_signal_connect(app_sink, "new-sample", G_CALLBACK(new_sample),
                      app_src);
 
-    if(gst_element_link_many(file_src, queue,app_sink,NULL)!=TRUE
+    if(gst_element_link_many(file_src,caps_filter, queue,app_sink,NULL)!=TRUE
 //       ||gst_element_link(app_src,fake_sink)!=TRUE
             ){
         g_printerr("some element linked error");
