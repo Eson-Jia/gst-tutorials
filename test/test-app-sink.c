@@ -54,7 +54,7 @@ int main(int argc, char *argv[])
     g_object_set(file_src, "location","/home/ubuntu/Videos/hunter.mkv",NULL);
     g_object_set(caps_filter, "caps",gst_caps_from_string("audio/x-raw"),NULL);
     g_object_set(app_sink, "emit-signals", TRUE,NULL);
-    gst_bin_add_many(GST_BIN(pipeline),file_src,caps_filter,queue,app_sink,app_src,NULL);
+    gst_bin_add_many(GST_BIN(pipeline),file_src,caps_filter,queue,app_sink,app_src,fake_sink,NULL);
     g_signal_connect(app_sink, "new-sample", G_CALLBACK(new_sample),
                      app_src);
 
